@@ -1,0 +1,28 @@
+{
+  "name": "my-redis",
+  "version": "1.0.0",
+  "description": "A simplified Redis-like in-memory key-value database built from scratch.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saloni-mehra/my-redis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/saloni-mehra/my-redis/issues"
+  },
+  "homepage": "https://github.com/saloni-mehra/my-redis#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
