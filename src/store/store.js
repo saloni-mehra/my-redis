@@ -1,3 +1,3 @@
-const store = {};
+const store = new Map();
 
 export default store;

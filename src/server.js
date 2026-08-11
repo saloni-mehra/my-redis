@@ -14,6 +14,7 @@ const server = net.createServer((socket) => {
         socket.write(response + "\n");
     });
 
+
     socket.on("end", () => {
         console.log("Client disconnected");
     });
@@ -22,7 +23,8 @@ const server = net.createServer((socket) => {
 
 
 
-
 server.listen(6379, () => {                         //because 6379 is Redis's standard/default port.
     console.log("Redis server is running on port 6379");
 });
+
+
