@@ -1,5 +1,5 @@
-const store = new Map();
-const expiry = new Map();
+export const store = new Map();
+export const expiry = new Map();
 
 export function set(key, value) {
     store.set(key, value);
