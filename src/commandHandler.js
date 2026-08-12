@@ -4,6 +4,9 @@ import { del } from "./commands/del.js";
 import { exists } from "./commands/exist.js";
 import { keys } from "./commands/keys.js";
 import { flushall } from "./commands/flushall.js";
+import { expireCommand } from "./commands/expire.js";
+import { ttlCommand } from "./commands/ttl.js";
+import { persistCommand } from "./commands/persist.js";
 
 
 const commandHandler = (command) => {
@@ -62,6 +65,42 @@ const commandHandler = (command) => {
 
     if (commandName === "FLUSHALL") {
         return flushall();
+    }
+    //for more better expire condition
+    if (commandName === "EXPIRE") {
+    const [key, seconds] = parts.slice(1);
+
+    if (!key || !seconds) {
+        return "ERR wrong number of arguments for 'expire' command";
+    }
+
+    const secondsNumber = Number(seconds);
+
+    if (Number.isNaN(secondsNumber)) {
+        return "ERR invalid expire time";
+    }
+
+    return expireCommand(key, secondsNumber);
+    }
+
+    if (commandName === "TTL") {
+    const [key] = parts.slice(1);
+
+    if (!key) {
+        return "ERR wrong number of arguments for 'ttl' command";
+    }
+
+    return ttlCommand(key);
+    }
+
+    if (commandName === "PERSIST") {
+    const [key] = parts.slice(1);
+
+    if (!key) {
+        return "ERR wrong number of arguments for 'persist' command";
+    }
+
+    return persistCommand(key);
     }
 
     return "ERROR: Unknown command";
