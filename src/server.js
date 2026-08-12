@@ -1,6 +1,8 @@
 import net from "net";
 import commandHandler from "./commandHandler.js";
+import { loadSnapshot, saveSnapshot } from "./persistence.js";
 
+loadSnapshot();
 
 const server = net.createServer((socket) => {
     console.log("Client connected");
@@ -15,18 +17,25 @@ const server = net.createServer((socket) => {
         socket.write(response + "\n");
     });
 
-
     socket.on("end", () => {
         console.log("Client disconnected");
     });
+    socket.on("error", (err) => {
+    console.log("Socket error:", err.message);
+});
 });
 
-
-
-
-server.listen(6379, () => {                         //because 6379 is Redis's standard/default port.
+server.listen(6379, () => {
     console.log("Redis server is running on port 6379");
 });
 
+process.on("SIGINT", () => {
+    console.log("Saving snapshot...");
 
+    saveSnapshot();
 
+    console.log("Snapshot saved.");
+    console.log("Redis server stopped.");
+
+    process.exit(0);
+});
