@@ -7,12 +7,14 @@ import { flushall } from "./commands/flushall.js";
 import { expireCommand } from "./commands/expire.js";
 import { ttlCommand } from "./commands/ttl.js";
 import { persistCommand } from "./commands/persist.js";
-
+import listHandler from "./listHandler.js";
+import hashHandler from "./hashHandler.js";
 
 const commandHandler = (command) => {
     const parts = command.split(" ");
 
     const commandName = parts[0].toUpperCase();
+    
 
     if (commandName === "PING") {
         return "PONG";
@@ -66,42 +68,62 @@ const commandHandler = (command) => {
     if (commandName === "FLUSHALL") {
         return flushall();
     }
+
+
     //for more better expire condition
     if (commandName === "EXPIRE") {
-    const [key, seconds] = parts.slice(1);
+        const [key, seconds] = parts.slice(1);
 
-    if (!key || !seconds) {
-        return "ERR wrong number of arguments for 'expire' command";
+        if (!key || !seconds) {
+            return "ERR wrong number of arguments for 'expire' command";
+        }
+
+        const secondsNumber = Number(seconds);
+
+        if (Number.isNaN(secondsNumber)) {
+            return "ERR invalid expire time";
+        }
+
+        return expireCommand(key, secondsNumber);
     }
 
-    const secondsNumber = Number(seconds);
-
-    if (Number.isNaN(secondsNumber)) {
-        return "ERR invalid expire time";
-    }
-
-    return expireCommand(key, secondsNumber);
-    }
 
     if (commandName === "TTL") {
-    const [key] = parts.slice(1);
+        const [key] = parts.slice(1);
 
-    if (!key) {
-        return "ERR wrong number of arguments for 'ttl' command";
+        if (!key) {
+            return "ERR wrong number of arguments for 'ttl' command";
+        }
+
+        return ttlCommand(key);
     }
 
-    return ttlCommand(key);
-    }
 
     if (commandName === "PERSIST") {
-    const [key] = parts.slice(1);
+        const [key] = parts.slice(1);
 
-    if (!key) {
-        return "ERR wrong number of arguments for 'persist' command";
+        if (!key) {
+            return "ERR wrong number of arguments for 'persist' command";
+        }
+
+        return persistCommand(key);
     }
 
-    return persistCommand(key);
+
+    //List data type 
+    const listResult = listHandler(commandName, parts);
+
+    if (listResult !== null) {
+        return listResult;
     }
+
+    //hash data type
+    const hashResult = hashHandler(commandName, parts);
+
+    if (hashResult !== null) {
+        return hashResult;
+    }
+
 
     return "ERROR: Unknown command";
 };

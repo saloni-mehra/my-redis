@@ -107,6 +107,15 @@ function isExpired(key) {
     return Date.now() >= expireAt;
 }
 
+export function hset(key, field, value) {
+    if (!store.has(key)) {
+        store.set(key, new Map());
+    }
+
+    const hash = store.get(key);
+    hash.set(field, value);
+}
+
 export default {
     set,
     get,

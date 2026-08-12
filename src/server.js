@@ -1,6 +1,7 @@
 import net from "net";
 import commandHandler from "./commandHandler.js";
 
+
 const server = net.createServer((socket) => {
     console.log("Client connected");
 
@@ -26,5 +27,6 @@ const server = net.createServer((socket) => {
 server.listen(6379, () => {                         //because 6379 is Redis's standard/default port.
     console.log("Redis server is running on port 6379");
 });
+
 
 
