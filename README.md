@@ -193,7 +193,6 @@ The runtime database file is intentionally ignored by Git.
 “Implemented RESP-based client-server communication with RESP request parsing and response formatting.”
 
 ---
-
 # 💻 Interactive CLI
 
 A custom CLI client is included for communicating with the server.
@@ -219,10 +218,10 @@ Example:
 (integer)1
 `
 The same client can also be used for Pub/Sub operations.
+
 ---
 
-# 🧪 Testing
-
+# Testing 
 Each feature was tested incrementally through the interactive CLI and multiple client connections.
 
 | Feature            | What was verified                                                                          |
@@ -237,16 +236,24 @@ Each feature was tested incrementally through the interactive CLI and multiple c
 ### Quick CLI Test
 
 ```text
-SET name Saloni
-GET name
-EXPIRE name 5
-TTL name
+> SET name Saloni
+"OK"
+
+> GET name
+"Saloni"
+
+> EXPIRE name 5
+(integer) 1
+
+> TTL name
+(integer) 5
 ```
 
 After the key expires:
 
 ```text
-GET name
+> GET name
+(nil)
 ```
 
 The key should no longer be available.
@@ -272,7 +279,7 @@ Client 2 → PUBLISH news Hello
 
 The subscriber should receive the published message.
 
-> All command testing uses the project's RESP-style responses (formated style User friendly).
+> All command testing uses the project's RESP-style responses with a user-friendly formatted display.
 ---
 
 # 💻 Example Usage
