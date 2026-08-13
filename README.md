@@ -221,7 +221,8 @@ The same client can also be used for Pub/Sub operations.
 ```
 ---
 
-##🚀 Testing 
+# 🚀 Testing
+
 Each feature was tested incrementally through the interactive CLI and multiple client connections.
 
 | Feature            | What was verified                                                                          |
