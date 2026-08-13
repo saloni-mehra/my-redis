@@ -1,10 +1,5 @@
-
-
-
-
 import net from "net";
 import readline from "readline";
-
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -36,20 +31,54 @@ rl.on("line", (command) => {
 function parseServerResponse(data) {
     const response = data.toString();
 
+    // RESP Array
+    if (response.startsWith("*")) {
+        const lines = response.split("\r\n");
+        const count = Number(lines[0].slice(1));
+
+        const values = [];
+        let index = 1;
+
+        for (let i = 0; i < count; i++) {
+            const type = lines[index][0];
+
+            if (type === "$") {
+                index++;
+
+                if (lines[index] === undefined) {
+                    values.push("(nil)");
+                } else {
+                    values.push(lines[index]);
+                }
+
+                index++;
+            } else if (type === ":") {
+                values.push(lines[index].slice(1));
+                index++;
+            }
+        }
+
+        return values.join(" ");
+    }
+
+    // RESP Integer
     if (response.startsWith(":")) {
         const number = response.split("\r\n")[0].slice(1);
         return `(integer) ${number}`;
     }
 
+    // RESP Nil
     if (response.startsWith("$-1")) {
         return "(nil)";
     }
 
+    // RESP Bulk String
     if (response.startsWith("$")) {
         const lines = response.split("\r\n");
         return `"${lines[1]}"`;
     }
 
+    // RESP Error
     if (response.startsWith("-")) {
         return `(error) ${response.slice(1).trim()}`;
     }

@@ -2,6 +2,7 @@ import net from "net";
 import commandHandler from "./commandHandler.js";
 import { loadSnapshot, saveSnapshot } from "./persistence.js";
 import { parseRESP, formatRESP } from "./resp.js";
+import { unsubscribeSocket } from "./pubsub.js";
 
 loadSnapshot();
 
@@ -27,9 +28,13 @@ const server = net.createServer((socket) => {
 
                 console.log("Received RESP:", command);
 
-                const response = commandHandler(command);
+                const response = commandHandler(command, socket);
 
-                socket.write(formatRESP(response));
+                    if (response.startsWith("*")) {
+                        socket.write(response);
+                    } else {
+                        socket.write(formatRESP(response));
+                    }
             }
 
             return;
@@ -39,14 +44,14 @@ const server = net.createServer((socket) => {
 
         console.log("Received:", command);
 
-        const response = commandHandler(command);
-
+        const response = commandHandler(command, socket);
         socket.write(response + "\n");
 
     });
 
     socket.on("end", () => {
-        console.log("Client disconnected");
+    console.log("Client disconnected");
+    unsubscribeSocket(socket);
     });
 
     socket.on("error", (err) => {

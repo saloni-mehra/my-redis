@@ -44,3 +44,16 @@ export function formatRESP(response) {
 
     return `$${Buffer.byteLength(String(response))}\r\n${response}\r\n`;
 }
+
+export function formatRESPArray(values) {
+    let response = `*${values.length}\r\n`;
+
+    for (const value of values) {
+        const stringValue = String(value);
+
+        response += `$${Buffer.byteLength(stringValue)}\r\n`;
+        response += `${stringValue}\r\n`;
+    }
+
+    return response;
+}

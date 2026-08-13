@@ -9,8 +9,10 @@ import { ttlCommand } from "./commands/ttl.js";
 import { persistCommand } from "./commands/persist.js";
 import listHandler from "./listHandler.js";
 import hashHandler from "./hashHandler.js";
+import { subscribe, publish, unsubscribe } from "./pubsub.js";
+import { formatRESPArray } from "./resp.js";
 
-const commandHandler = (command) => {
+const commandHandler = (command, socket) => {
     const parts = command.split(" ");
 
     const commandName = parts[0].toUpperCase();
@@ -18,6 +20,49 @@ const commandHandler = (command) => {
 
     if (commandName === "PING") {
         return "PONG";
+    }
+
+        if (commandName === "SUBSCRIBE") {
+        const channel = parts[1];
+
+        if (!channel) {
+            return "ERR wrong number of arguments for 'subscribe' command";
+        }
+
+        subscribe(channel, socket);
+
+        return formatRESPArray([
+        "subscribe",
+        channel,
+        1
+        ]);
+    }
+
+    if (commandName === "UNSUBSCRIBE") {
+    const channel = parts[1];
+
+    if (!channel) {
+        return "ERR wrong number of arguments for 'unsubscribe' command";
+    }
+
+    unsubscribe(channel, socket);
+
+    return formatRESPArray([
+        "unsubscribe",
+        channel,
+        0
+    ]);
+    }
+
+    if (commandName === "PUBLISH") {
+        const channel = parts[1];
+        const message = parts.slice(2).join(" ");
+
+        if (!channel || !message) {
+            return "ERR wrong number of arguments for 'publish' command";
+        }
+
+        return String(publish(channel, message));
     }
 
     if (commandName === "SET") {
