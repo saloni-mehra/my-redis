@@ -218,7 +218,7 @@ The client provides an interactive environment where commands can be entered dir
 (integer)1
 `
 The same client can also be used for Pub/Sub operations.
-```md
+```
 ---
 
 ##🚀 Testing 
