@@ -4,7 +4,7 @@ export const del = (keys) => {
     let deletedCount = 0;
 
     for (const key of keys) {
-        if (store.delete(key)) {
+        if (store.del(key)) {
             deletedCount++;
         }
     }
