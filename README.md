@@ -205,7 +205,7 @@ node client/client.js
 
 The client provides an interactive environment where commands can be entered directly.
 
-Example:
+## Example:
 
 ```text
 > SET name Saloni
@@ -218,10 +218,10 @@ Example:
 (integer)1
 `
 The same client can also be used for Pub/Sub operations.
-
+```md
 ---
 
-# Testing 
+##🚀 Testing 
 Each feature was tested incrementally through the interactive CLI and multiple client connections.
 
 | Feature            | What was verified                                                                          |
